@@ -161,7 +161,7 @@ while(1){
 			}
 		}
 		if(defined($data{'SSID'})){
-			print BOLD, BLUE, &hrs . "  \t\"" . $data{'SSID'} . "\" (" . &macToVendor($data{'BSSID'}) . $data{'BSSID'} . ") Chan " . $data{'channel'} . " MCS " . $data{'MCS'} . " (" . $data{'lastTxRate'} . " mbps)\tRSSI " . $data{'agrCtlRSSI'} . " NF " . $data{'agrCtlNoise'} . " SNR " . $data{'SNR'} . " " . &speedReport(($bytes * 8), $bytes_transfered) , RESET;
+			print BOLD, WHITE, &hrs . "  \t\"" . $data{'SSID'} . "\" (" . &macToVendor($data{'BSSID'}) . $data{'BSSID'} . ") Chan " . $data{'channel'} . " MCS " . $data{'MCS'} . " (" . $data{'lastTxRate'} . " mbps)\tRSSI " . $data{'agrCtlRSSI'} . " NF " . $data{'agrCtlNoise'} . " SNR " . $data{'SNR'} . " " . &speedReport(($bytes * 8), $bytes_transfered) , RESET;
 
 			if($are_we_logging){
 				print $LOG time . "," . join(",", ($data{'SSID'}, $data{'BSSID'}, $data{'channel'}, $data{'MCS'}, $data{'lastTxRate'}, $data{'agrCtlRSSI'}, $data{'agrCtlNoise'})) . "\n";
