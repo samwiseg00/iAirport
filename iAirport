@@ -1,28 +1,28 @@
 #!/usr/bin/perl
 # File:        iAirport
 # Date:        2015/11/03
-# Description: MAC OS X Wi-Fi analyser 
-# Author:      Guillaume Germain (ggermain@gmail.com) 
+# Description: MAC OS X Wi-Fi analyser
+# Author:      Guillaume Germain (ggermain@gmail.com)
 #
 # Licensed under the MIT License (MIT)
 #
 # Copyright (c) 2015 Guillaume Germain
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this
 # software and associated documentation files (the "Software"), to deal in the Software
 # without restriction, including without limitation the rights to use, copy, modify,
 # merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-# permit persons to whom the Software is furnished to do so, subject to the following 
+# permit persons to whom the Software is furnished to do so, subject to the following
 # conditions:
 #
-# The above copyright notice and this permission notice shall be included in all copies 
+# The above copyright notice and this permission notice shall be included in all copies
 # or substantial portions of the Software.
 #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
-# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
-# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 use strict;
@@ -53,7 +53,7 @@ my $bytes_before = &readInterfaceBytes;
 
 
 
-### Which version of Mac OS X are we running? 
+### Which version of Mac OS X are we running?
 foreach my $line (`sw_vers`){
 	my @t = split(" ", $line);
 	if($t[0] =~ /ProductVersion/){
@@ -96,7 +96,7 @@ if($argv_string ne ""){
 
 
 		# Verbosity
-		if($argv_string =~ /v/){	
+		if($argv_string =~ /v/){
 			print "Running in verbose mode\n";
 		}
 
@@ -135,8 +135,8 @@ while(1){
 	$bytes_transfered += $bytes;
 	$bytes_before = $bytes_total;
 
-	# Processing 'airport -I' information 
-	&airport;  
+	# Processing 'airport -I' information
+	&airport;
 
 	# Processing /var/log/wifi.log information
 	&wifiLogMunch;
@@ -161,7 +161,7 @@ while(1){
 			}
 		}
 		if(defined($data{'SSID'})){
-			print BOLD, GREEN, &hrs . "  \t\"" . $data{'SSID'} . "\" (" . &macToVendor($data{'BSSID'}) . $data{'BSSID'} . ") Chan " . $data{'channel'} . " MCS " . $data{'MCS'} . " (" . $data{'lastTxRate'} . " mbps)\tRSSI " . $data{'agrCtlRSSI'} . " NF " . $data{'agrCtlNoise'} . " SNR " . $data{'SNR'} . " " . &speedReport(($bytes * 8), $bytes_transfered) , RESET;
+			print BOLD, BLUE, &hrs . "  \t\"" . $data{'SSID'} . "\" (" . &macToVendor($data{'BSSID'}) . $data{'BSSID'} . ") Chan " . $data{'channel'} . " MCS " . $data{'MCS'} . " (" . $data{'lastTxRate'} . " mbps)\tRSSI " . $data{'agrCtlRSSI'} . " NF " . $data{'agrCtlNoise'} . " SNR " . $data{'SNR'} . " " . &speedReport(($bytes * 8), $bytes_transfered) , RESET;
 
 			if($are_we_logging){
 				print $LOG time . "," . join(",", ($data{'SSID'}, $data{'BSSID'}, $data{'channel'}, $data{'MCS'}, $data{'lastTxRate'}, $data{'agrCtlRSSI'}, $data{'agrCtlNoise'})) . "\n";
@@ -172,13 +172,13 @@ while(1){
 	}
 
 
-	sleep 1; 
+	sleep 1;
 }
 
 ### Function to format the date and time
 sub hrs{
 	my ($sec, $min, $hr, $day, $mon, $year) = localtime;
-	return sprintf("%04d/%02d/%02d %02d:%02d:%02d", 
+	return sprintf("%04d/%02d/%02d %02d:%02d:%02d",
 		1900 + $year, $mon + 1, $day, $hr, $min, $sec);
 
 }
@@ -225,15 +225,15 @@ sub wifiLogMunch{
 
 		# Ignoring the following
 		if($line =~ /WiFiCloudSyncEngineCopyLogStatementCallback/ ||
-			$line =~ /airportdProcessSystemConfigurationEvent/ || 
+			$line =~ /airportdProcessSystemConfigurationEvent/ ||
 			$line =~ /\<Wi\-Fi Menu Extra/ ||
-			$line =~ /\<airportd\[(\d+)\]\>\ Adding network/ || 
+			$line =~ /\<airportd\[(\d+)\]\>\ Adding network/ ||
 			$line =~ /Driver Event:/ ||
 			$line =~ /QUERY SCAN CACHE/ ||
-			$line =~ /TETHER DEVICE/ || 
+			$line =~ /TETHER DEVICE/ ||
 			$line =~ /GAS CACHE/ ||
 			$line =~ /SCAN request received/ ||
-			$line =~ /\_SC\_callback\: Changed keys/ || 
+			$line =~ /\_SC\_callback\: Changed keys/ ||
 			$line =~ /IO80211ScanManager\:\:/){
 			next;
 		}
@@ -242,7 +242,7 @@ sub wifiLogMunch{
 
 		if($line =~ /\<airportd\[(\d+)\]\> Successful cache-assisted background/ ||
 			$line =~ /\<airportd\[(\d+)\]\> Successful cache-assisted scan request for com.apple.wifi.proxy with channels/){
-			$multiline_read = 'scan'; 
+			$multiline_read = 'scan';
 			$data{'channel_scan'} = "";
 			next;
 		}
@@ -260,18 +260,18 @@ sub wifiLogMunch{
 				$line =~ /channelNumber\=([0-9]+)/;
 				$data{'channel_scan'} .= $1 . " ";
 				next;
-			} 
+			}
 		}
 
 
 
 		if($line =~ /IO80211ScanManager/){
-			next; 
+			next;
 		}
 
 
 		if($jl){ print "\n"; $jl = 0; }
-		print $line;    
+		print $line;
 
 
 
@@ -363,28 +363,28 @@ sub isDebugEnabled{
 	}
 
 	my %debug_arg = ("DriverDiscovery" => 1,
-		"DriverEvent" => 1, 
-		"Info" => 1, 
+		"DriverEvent" => 1,
+		"Info" => 1,
 		"SystemConfiguration" => 1,
-		"UserEvent" => 1, 
+		"UserEvent" => 1,
 		"PreferredNetworks" => 1,
-		"AutoJoin" => 1, 
-		"IPC" => 1, 
-		"Scan" => 1, 
-		"802.1x" => 1, 
-		"Assoc" => 1, 
-		"Keychain" => 1, 
-		"RSNAuth" => 1, 
-		"WoW" => 1, 
-		"P2P" => 1, 
-		"Roam" => 1, 
+		"AutoJoin" => 1,
+		"IPC" => 1,
+		"Scan" => 1,
+		"802.1x" => 1,
+		"Assoc" => 1,
+		"Keychain" => 1,
+		"RSNAuth" => 1,
+		"WoW" => 1,
+		"P2P" => 1,
+		"Roam" => 1,
 		"Offload" => 1,
-		"LogFile" => 1, 
-		"DriverInfo" => 1, 
-		"DriverError" => 1, 
-		"DriverWPA" => 1, 
-		"DriverScan" => 1, 
-		"VendorAssoc" => 1, 
+		"LogFile" => 1,
+		"DriverInfo" => 1,
+		"DriverError" => 1,
+		"DriverWPA" => 1,
+		"DriverScan" => 1,
+		"VendorAssoc" => 1,
 		"VendorConnection" => 1);
 
 	my $all_there = 1;
@@ -400,7 +400,7 @@ sub isDebugEnabled{
 
 	if($all_there == 1){
 		# Debugging is enabled
-		return 1; 
+		return 1;
 	}else{
 		# Debugging is disabled
 		return 0;
@@ -485,4 +485,3 @@ sub macToVendor{
 		return $oui_data{uc $oui_to_search} . " ";
 	}
 }
-
